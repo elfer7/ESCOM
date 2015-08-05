@@ -1,0 +1,9 @@
+Instrucciones Proyecto 3
+
+El programa requiere un argumento obligatorio: la cantidad máxima de asteroides. Ejemplo:
+	./Proyecto3 -a 600
+	./Proyecto3 --asteroides 600
+
+También incluye un argumento opcional con motivos de depuración simple:
+	./Proyecto3 -v
+	./Proyecto3 --verbosidad

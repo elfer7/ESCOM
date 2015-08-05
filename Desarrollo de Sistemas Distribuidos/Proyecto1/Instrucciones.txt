@@ -1,0 +1,20 @@
+Instrucciones Proyecto 1
+
+Basta con asignar permisos de ejecución al script "Proyecto1.sh" mediante el comando "chmod +x Proyecto1.sh" y ejecutarlo con "./Proyecto1.sh".
+
+Programa 4 - Temperaturas:
+	El programa requiere dos argumentos obligatorios: la temperatura deseada y la escala en que se almacenará. Ejemplo:
+		./a.out -t 200 -e c -k -c -f
+		./a.out --temperatura 200 --escala c -k -c -f
+
+	En el ejemplo anterior:
+		=> Se almacenan 200° Celsius ya que en el argumento "-e" ó "--escala" se especifica el valor "c". Los posibles valores son:
+			c ===> Celsius
+			k ===> Kelvin
+			f ===> Fahrenheit
+		=> Los argumentos "-c" ó "--celsius", "-k" ó "--kelvin" y "-f" ó "--fahrenheit" indican en qué formato se imprimirá la temperatura previamente almacenada. Si ninguno de ellos es especificado, el programa no imprimirá texto en la salida.
+
+Programa 5 - Fracciones:
+	Para que el programa compile, es necesario instalar las librerías de desarrollo Boost (ArchLinux: pacman -S boost; Ubuntu: apt-get install libboost-all-dev). En ejecución, el programa necesita dos argumentos obligatorios: numerador y denominador. Ejemplo:
+		./a.out -n 20 -d 80
+		./a.out --numerador 20 --denominador 80

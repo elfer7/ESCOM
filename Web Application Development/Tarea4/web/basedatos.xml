@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE bd
+[
+	<!ELEMENT bd (usuarios+)>
+	<!ELEMENT usuarios (usuario+)>
+	<!ELEMENT usuario EMPTY>
+	<!ATTLIST usuario id NMTOKENS #REQUIRED>
+	<!ATTLIST usuario clave NMTOKENS #REQUIRED>
+]>
+<bd>
+	<usuarios>
+		<usuario id="nooberto" clave="x_yz" />
+		<usuario id="nullencio" clave="teclado" />
+		<usuario id="cafeconleche" clave="chupiicsa" />
+		<usuario id="ledzeppelin" clave="666_" />
+	</usuarios>
+</bd>

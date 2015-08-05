@@ -1,0 +1,14 @@
+a, a:hover, a:link, a:visited, a:active
+{
+    font-family: sans-serif;
+    font-size: 2em;
+    color: #000;
+}
+.js-habilitado
+{
+    color: #0089ff !important;
+}
+.js-deshabilitado
+{
+    color: #4354fd !important;
+}

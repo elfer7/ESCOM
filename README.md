@@ -9,7 +9,7 @@ Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejerc
 - C++
 - C#
 - Java
-- Assembly
+- Ensamblador (AVR, x86 Linux)
 - Shell Script
 - Batch
 - Python

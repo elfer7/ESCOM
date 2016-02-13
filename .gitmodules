@@ -1,0 +1,12 @@
+[submodule "Aplicaciones para Comunicaciones en Red"]
+	path = Aplicaciones para Comunicaciones en Red
+	url = git@github.com:Stederr/AplicacionesComunicacionesRed.git
+[submodule "Application Development for Mobile Devices"]
+	path = Application Development for Mobile Devices
+	url = git@github.com:Stederr/ApplicationDevelopmentForMobileDevices.git
+[submodule "Proyecto ETS - Desarrollo de Sistemas Distribuidos"]
+	path = Proyecto ETS - Desarrollo de Sistemas Distribuidos
+	url = git@github.com:Stederr/ProyectoETS-DSD.git
+[submodule "Proyecto ETS - Cryptography"]
+	path = Proyecto ETS - Cryptography
+	url = git@github.com:Stederr/ProyectoETS-Cryptography.git

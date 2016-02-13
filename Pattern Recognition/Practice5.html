@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Practice 5 | Pattern Recognition</title>
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<link rel="stylesheet" type="text/css" href="skeleton.css">
+</head>
+<body>
+	<div id="contenedor" class="container">
+		<div class="row">
+			<h1>Práctica 5: Método K-NN</h1>
+		</div>
+	</div>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		/*
+			Ortega Ortuño Eder - 3CM7
+		*/
+
+		function run(vectores_conocidos, vector_desconocido, k)
+		{
+			var elementos = [];
+
+			for(i in vectores_conocidos)
+			{
+				for(j in vectores_conocidos[i])
+				{
+					elementos.push({'distancia':getDistanciaEuclidea(vector_desconocido, vectores_conocidos[i][j]), 'clase':i}); // Guarda el valor de la distancia y la clase a la que pertenece
+				}
+			}
+
+			elementos.sort(function(a, b){return parseFloat(a.distancia) - parseFloat(b.distancia)}); // Ordenar ascendentemente. Src: stackoverflow.com/questions/979256
+			elementos = elementos.slice(0, k); // Seleccionar K elementos
+
+			console.log(elementos);
+			var x = getClaseMasComun(vectores_conocidos.length, elementos);
+
+			$('#contenedor').append('<h3>El patrón desconocido ('+vector_desconocido[0]+', '+vector_desconocido[1]+') pertenece a la clase '+x.clase_mas_comun+' con '+x.cantidad+' elementos encontrados.</h3>');
+
+			function getDistanciaEuclidea(vector1, vector2)
+			{
+				return Math.sqrt(Math.pow(vector1[0] - vector2[0], 2) + Math.pow(vector1[1] - vector2[1], 2));
+			}
+			function getClaseMasComun(cantidad_clases, vecinos_mas_cercanos)
+			{
+				var contador = new Array(cantidad_clases).fill(0); // Rellena con ceros cierta cantidad de elementos
+				var tmp = [];
+
+				for(i in vecinos_mas_cercanos)
+					contador[parseInt(vecinos_mas_cercanos[i].clase)]++; // La cantidad de elementos por clase se almacenan en la posición del mismo número
+
+				tmp = contador;
+				tmp.sort(function(a, b){return a-b}); // Orden ascendente
+				tmp.reverse(); // Orden descendente
+
+				return {'clase_mas_comun':contador.indexOf(tmp[0]), 'cantidad':tmp[0]};
+			}
+		}
+		function init()
+		{
+			var clase0 = new Array([13, 15], [19, 20], [31, 33]);
+			var clase1 = new Array([16, 35], [21, 34], [30, 14]);
+			var clase2 = new Array([26, 19], [31, 24], [4, 17]);
+			run(new Array(clase0, clase1, clase2), new Array(10, 20), 3);
+		}
+
+		$(document).ready(function(){init()});
+	</script>
+</body>
+</html>

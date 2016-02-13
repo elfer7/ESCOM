@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Practice 2 | Pattern Recognition</title>
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<link rel="stylesheet" type="text/css" href="skeleton.css">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<h1>Práctica 2: Clasificador Bayesiano</h1>
+		</div>
+		<div class="row">
+			<h3>Tabla de frecuencias</h3>
+			<table>
+				<thead>
+					<tr class="pesos"><th>Pesos (X)</th></tr>
+				</thead>
+				<tbody id="frecuencias"></tbody>
+			</table>
+		</div>
+		<div class="row">
+			<h3>Tabla de distribución de probabilidad</h3>
+			<table>
+				<thead>
+					<tr class="pesos"><th>Pesos (X)</th></tr>
+				</thead>
+				<tbody id="distribuciones"></tbody>
+			</table>
+		</div>
+		<div class="row">
+			<h3>Datos</h3>
+			<div class="one-third column"><input type="text" placeholder="Valor de la variable X" id="valorX"><button onclick="calcular()">Calcular</button></div>
+		</div>
+	</div>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		/*
+			Ortega Ortuño Eder - 3CM7
+		*/
+
+		// Cantidades de frutas (namespace Frutas)
+		var frutas = {
+			naranjas:  function() {return 2250},
+			mandarinas:  function() {return 2300},
+			toronjas:  function() {return 2450}
+		};
+		var espacioMuestral = frutas.naranjas() + frutas.mandarinas() + frutas.toronjas();
+		
+		var cantidades = [frutas.naranjas(), frutas.mandarinas(), frutas.toronjas()];
+
+		// Rango de pesos entre las frutas
+		var pesos = [100, 150, 180, 200, 250, 280, 300];
+		var frecuenciaFrutas = [[15, 40, 100, 500, 1500, 80, 15], [0, 0, 2, 3, 295, 650, 1500], [750, 1470, 50, 25, 5, 0, 0]]; // La tabla de frecuencias indica la cantidad de frutas que poseen ese peso en específico, el cual varía entre 100 y 300gr
+		var distribuciones = calcularDistribucion(cantidades, frecuenciaFrutas, pesos);
+
+		function calcularProb(a, b)
+		{
+			return (a / b).toFixed(3);
+		}
+		function calcularDistribucion(cc, ff, pp)
+		{
+			var dd = [], tmp = [];
+			for(i = 0; i < cc.length; i++)
+			{
+				for(j = 0; j < pp.length; j++)
+					tmp.push((ff[i][j] / cc[i]).toFixed(3));
+				dd.push(tmp);
+				tmp = [];
+			}
+			return dd;
+		}
+		function llenarTabla(titulos, arreglo, tabla)
+		{
+			var t = 0;
+			var tmp = '';
+			for(i = 0; i < arreglo.length; i++)
+			{
+				for(j = 0; j < arreglo[i].length; j++)
+					tmp += '<td>'+arreglo[i][j]+'</td>';
+				$('#'+tabla).append('<tr><th>'+titulos[t]+'</th>'+tmp);
+				$('#'+tabla).append('</tr>');
+				tmp = '';
+				t++;
+			}
+		}
+
+		function valorMasCercano(array, num) // Tomado de http://stackoverflow.com/questions/8584902
+		{
+			var i=0;
+			var minDiff=1000;
+			var ans;
+			for(i in array)
+			{
+				var m=Math.abs(num-array[i]);
+				if(m<minDiff)
+				{ 
+					minDiff=m; 
+					ans=array[i]; 
+				}
+			}
+			return ans;
+		}
+
+		function calcular()
+		{
+			var tmp = [];
+			for(i = 0; i < 3; i++)
+			{
+				x = pesos.indexOf(valorMasCercano(pesos, $('#valorX').val())); // Obtiene el valor del arreglo que tenga ese valor
+				console.log(calcularProb(cantidades[i], espacioMuestral));
+				tmp.push(Math.log(calcularProb(cantidades[i], espacioMuestral)) + Math.log(distribuciones[i][x]));
+			}
+			console.log(tmp);
+			alert('X pertenece a la clase '+(tmp.indexOf(Math.max.apply(window, tmp)) + 1));
+		}
+		function init()
+		{
+			// Llenar los títulos de pesos
+			$.each(pesos, function(llave, valor){$('.pesos').append('<th>'+valor+'</th>')});
+			// Llenar la tabla de frecuencias
+			llenarTabla(['Naranjas', 'Mandarinas', 'Toronjas'], frecuenciaFrutas, 'frecuencias');
+			// Llenar la tabla de distribución
+			llenarTabla(['P(X / C<sub>1</sub>)', 'P(X / C<sub>2</sub>)', 'P(X / C<sub>3</sub>)'], distribuciones, 'distribuciones');
+		}
+
+		$(document).ready(function(){init()});
+	</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+2+3*4/5%6^7
+3/2
+3/2.0
+3.0/2
+entero -55=>__var_int;
+decimal 6.66=>__var_dec;
+cadena "holamundo"=>__var_str;
+funcion entero mifuncion();
+funcion decimal miotrafuncion();
+funcion cadena ff();
+__var_int
+.__var_dec
+#__var_str
+__var_int+.__var_dec*2
+entero varvar;
+decimal varvarvar;
+101=>varvar
+-1024.9=>varvarvar
+varvar/.varvarvar
+-.5=>varvarvar
+.varvarvar
+chau
+chau

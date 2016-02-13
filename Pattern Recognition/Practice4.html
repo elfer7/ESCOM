@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Practice 4 | Pattern Recognition</title>
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<link rel="stylesheet" type="text/css" href="skeleton.css">
+</head>
+<body>
+	<div id="contenedor" class="container">
+		<div class="row">
+			<h1>Práctica 4: Clasificación con aprendizaje multiclase</h1>
+		</div>
+	</div>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		/*
+			Ortega Ortuño Eder - 3CM7
+		*/
+
+		function run(cma, limite_iteraciones)
+		{
+			// CMA = Conjunto de Muestras de Aprendizaje. W = peso (weight)
+			var posicion_indiferencia = new Array(0, 0, 0); // Posición de indiferencia
+			var mu = 1; // I don't know what this means too (μ)
+			var maxima = 0;
+			var iteracion = 1;
+			var pesos = new Array(cma.length);
+			var funciones_discriminantes = new Array(cma.length);
+
+			// Llenar el array de pesos con el vector de indiferencia
+			for(var i = 0; i < cma.length; i++)
+				pesos[i] = posicion_indiferencia;
+
+			while(iteracion <= limite_iteraciones)
+			{
+				$('#contenedor').append('<div class="row"><h3>Iteración '+iteracion+': <small>FD<sub>'+maxima+'</sub> debe ser máxima.</small></h3>');
+
+				for(i in cma)
+				{
+					funciones_discriminantes[i] = getFuncionDiscriminante(pesos[i], cma[maxima]);
+					$('#contenedor').append('<p>FD<sub>'+i+'</sub> = ('+pesos[i][0]+', '+pesos[i][1]+', '+pesos[i][2]+') x ('+cma[maxima][0]+', '+cma[maxima][1]+', '+cma[maxima][2]+') = '+funciones_discriminantes[i]+'</p>');
+				}
+
+				if(valoresSonIguales(funciones_discriminantes) || maxima != indiceMaxValor(funciones_discriminantes))
+				{
+					var simbolo = '?';
+					var mult, sum_res;
+					$('#contenedor').append('<p>Como FD<sub>'+maxima+'</sub> <strong>no es mayor</strong>, debe aumentarse.</p>');
+					for(var i = 0; i < cma.length; i++)
+					{
+						mult = multiplicar(mu, cma[maxima]);
+						if(i == maxima)
+						{
+							sum_res = sumar(pesos[i], mult);
+							simbolo = '+';
+						}
+						else
+						{
+							sum_res = restar(pesos[i], mult);
+							simbolo = '-';
+						}
+						$('#contenedor').append('<p>W<sub>'+i+'</sub>(siguiente_iteración) = ('+pesos[i][0]+', '+pesos[i][1]+', '+pesos[i][2]+') '+simbolo+' ('+mult[0]+', '+mult[1]+', '+mult[2]+') = ('+sum_res[0]+', '+sum_res[1]+', '+sum_res[2]+')</p>');
+						pesos[i] = sum_res;
+					}
+				}
+				else
+				{
+					$('#contenedor').append('<p>Como FD<sub>'+maxima+'</sub> <strong>es mayor</strong>, entonces:</p>');
+					for(i in pesos)
+						$('#contenedor').append('<p>W<sub>'+i+'</sub>(siguiente_iteración) = ('+pesos[i][0]+', '+pesos[i][1]+', '+pesos[i][2]+')</p>');
+				}
+
+				iteracion++;
+
+				if(maxima < cma.length - 1)
+					maxima++;
+				else
+					maxima = 0;
+			}
+			$('#contenedor').append('<div class="row"><h3>Ecuaciones de los hiperplanos</h3>');
+			for(i in pesos)
+				$('#contenedor').append('<p>FD<sub>'+i+'</sub> = ('+pesos[i][0]+')X<sub>1</sub> + ('+pesos[i][1]+')X<sub>2</sub> + ('+pesos[i][2]+')</p>');
+			$('#contenedor').append('<p><img src="graph.png"></p>');
+			$('#contenedor').append('</div>');
+
+			function valoresSonIguales(array) // Src: stackoverflow.com/questions/4025893
+			{
+				var first = array[0];
+				return array.every(function(element){
+					return element === first;
+				});
+			}
+			function indiceMaxValor(arreglo) // Src: stackoverflow.com/questions/11301438
+			{
+				return arreglo.indexOf(Math.max.apply(Math, arreglo));
+			}
+			function getFuncionDiscriminante(vector, peso)
+			{
+				return vector[0] * peso[0] + vector[1] * peso[1] + vector[2] * peso[2]; // Ya está considerada la forma transpuesta del peso actual
+			}
+			function multiplicar(constante, vector)
+			{
+				return new Array(constante * vector[0], constante * vector[1], constante * vector[2]);
+			}
+			function sumar(vector1, vector2)
+			{
+				return new Array(vector1[0] + vector2[0], vector1[1] + vector2[1], vector1[2] + vector2[2]);
+			}
+			function restar(vector1, vector2)
+			{
+				return new Array(vector1[0] - vector2[0], vector1[1] - vector2[1], vector1[2] - vector2[2]);
+			}
+		}
+		function init()
+		{
+			var foobar = 1; // I don't know what this means, just append to coords
+			run(new Array([0, 0, foobar], [1, 1, foobar], [-1, 1, foobar]), 7);
+		}
+
+		$(document).ready(function(){init()});
+	</script>
+</body>
+</html>

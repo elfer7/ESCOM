@@ -9,7 +9,7 @@ Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejerc
 - C++
 - C#
 - Java
-- Ensamblador (AVR, x86 Linux)
+- Ensamblador (AVR, x86_64)
 - Shell Script
 - Batch
 - Python
@@ -28,6 +28,8 @@ Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejerc
 - LaTeX
 - SQL
 - VHDL
+- Flex (generador de analizadores léxicos)
+- Bison (generador de analizadores sintácticos)
 
 ##Créditos
 El código de estos proyectos y ejercicios se distribuyen bajo la licencia **Apache v2.0**, por lo que se puede distribuir el código libremente siempre y cuando se haga referencia al autor y enlaces directos al sitio del proyecto.

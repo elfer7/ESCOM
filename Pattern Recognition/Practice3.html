@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Practice 3 | Pattern Recognition</title>
+	<link rel="stylesheet" type="text/css" href="normalize.css">
+	<link rel="stylesheet" type="text/css" href="skeleton.css">
+</head>
+<body>
+	<div id="contenedor" class="container">
+		<div class="row">
+			<h1>Práctica 3: Clasificación con aprendizaje biclase (algoritmo Perceptrón)</h1>
+		</div>
+	</div>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		/*
+			Ortega Ortuño Eder - 3CM7
+		*/
+
+		function run(cma)
+		{
+			// CMA = Conjunto de Muestras de Aprendizaje. W = peso (weight)
+			var w_actual = new Array(0, 0, 0); // Posición de indiferencia
+			var mu = 1; // I don't know what this means too (μ)
+			var vector = 0;
+			var iteracion = 1;
+
+			do
+			{
+				for(clase in cma)
+				{
+					$('#contenedor').append('<div class="row"><h3>Iteración: '+iteracion+'</h3>');
+					console.debug('-----------------------------------');
+					console.debug('Clase: %d', clase);
+					console.log(w_actual);
+					console.log('+ / -');
+					console.log(multiplicar(mu, cma[clase][vector]));
+					if(clase == 0)
+					{
+						if(getFuncionDiscriminante(clase, cma[clase][vector], w_actual) <= 0)
+						{
+							w_actual = sumar(w_actual, multiplicar(mu, cma[clase][vector]));
+							console.warn('Error'); 
+						}
+						else
+							console.warn('Acierto');
+					}
+					else
+					{
+						if(getFuncionDiscriminante(clase, cma[clase][vector], w_actual) >= 0)
+						{
+							w_actual = restar(w_actual, multiplicar(mu, cma[clase][vector]));
+							console.warn('Error'); 
+						}
+						else
+							console.warn('Acierto');
+					}
+					console.log('=');
+					console.log(w_actual);
+
+					$('#contenedor').append('<p class="font-size: 24px !important;"><strong>W<sub>'+iteracion+'</sub> = </strong> ('+w_actual[0]+', '+w_actual[1]+', '+w_actual[2]+')</p></div>');
+
+					iteracion++;
+				}
+				vector++;
+			}
+			while(vector < 3);
+
+			function getFuncionDiscriminante(clase, vector, peso)
+			{
+				/*
+					Algoritmo perceptrón:
+						- Para la clase 1
+							=> Si multiplicar(transpuesta(w), x) > 0, entonces es un acierto (return true) y w_siguiente = w_actual
+							=> Caso contrario w_siguiente = w_actual + multiplicar(mu, x)
+						- Para la clase 2
+							=> Si multiplicar(transpuesta(w), x) < 0, entonces es un acierto (return true) y w_siguiente = w_actual
+							=> Caso contrario w_siguiente = w_actual - multiplicar(mu, x)
+				*/
+				return vector[0] * peso[0] + vector[1] * peso[1] + vector[2] * peso[2]; // Ya está considerada la forma transpuesta del peso actual
+			}
+			function multiplicar(constante, vector)
+			{
+				return new Array(constante * vector[0], constante * vector[1], constante * vector[2]);
+			}
+			function sumar(vector1, vector2)
+			{
+				return new Array(vector1[0] + vector2[0], vector1[1] + vector2[1], vector1[2] + vector2[2]);
+			}
+			function restar(vector1, vector2)
+			{
+				return new Array(vector1[0] - vector2[0], vector1[1] - vector2[1], vector1[2] - vector2[2]);
+			}
+		}
+		function init()
+		{
+			var foobar = 1; // I don't know what this means, just append to coords
+			var clase1 = new Array([0, 0, foobar], [0, 2, foobar], [1, 2, foobar]); // La clase 1 tiene tres patrones conocidos en (x, y) y se le añade algún 'foobar' para volverlo un vector de tres dimensiones
+			var clase2 = new Array([1, 0, foobar], [2, 0, foobar], [2, 1, foobar]);
+			run(new Array(clase1, clase2));
+		}
+
+		$(document).ready(function(){init()});
+	</script>
+</body>
+</html>

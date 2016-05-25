@@ -30,6 +30,7 @@ Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejerc
 - VHDL
 - Flex (generador de analizadores léxicos)
 - Bison (generador de analizadores sintácticos)
+- Matlab Scripts
 
 ##Créditos
 El código de estos proyectos y ejercicios se distribuyen bajo la licencia **Apache v2.0**, por lo que se puede distribuir el código libremente siempre y cuando se haga referencia al autor y enlaces directos al sitio del proyecto.

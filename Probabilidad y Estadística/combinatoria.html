@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!---
+	IPN - ESCOM
+	Probabilidad y Estadística
+	Ortega Ortuño Eder - 2CV2
+-->
+<html lang="es_MX">
+<head>
+	<meta charset="UTF-8">
+	<title>Ejercicio 1 - Probabilidad y Estadística</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="css/materialize.min.css">
+	<link rel="stylesheet" href="css/Treant.css">
+</head>
+<body>
+	<style>
+	#nhx-contenedor
+	{
+		width: 700px;
+		height: 600px;
+		margin: 0 auto;
+	}
+	.node
+	{
+		color: #2bbbad;
+		border: 3px solid #2bbbad ;
+		padding: 5px;
+		border-radius: 6px;
+	}
+	.node p
+	{
+		font-size: 14px;
+		font-weight: bold;
+		margin: 5px;
+	}
+	</style>
+	<div class="container">
+		<h1>Generador de combinatorias</h1>
+		<h6>Ortega Ortuño Eder - 2CV2</h6>
+		<div class="modal nhx_modal" id="nhx_asistente_1">
+			<div class="modal-content">
+				<h4>Cantidad de representantes</h4>
+				<div class="row">
+					<div class="input-field col m12">
+						<p class="range-field"><input type="range" id="nhx_representantes" min="2" max="10"></p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a class="waves-effect waves-light btn" onclick="initDatos()">Siguiente</a>
+			</div>
+		</div>
+		<div class="modal nhx_modal modal-fixed-footer" id="nhx_asistente_2">
+			<div class="modal-content">
+				<h4 id="nhx_asistente_2_titulo"></h4>
+				<div class="row">
+					<div class="input-field col m12">
+						<p class="range-field"><input type="range" id="nhx_datos" min="1" max="50"></p>
+					</div>
+				</div>
+				<div class="row" id="nhx_datos_array"></div>
+			</div>
+			<div class="modal-footer">
+				<a class="waves-effect waves-light btn" onclick="nextDato()">Siguiente</a>
+			</div>
+		</div>
+		<div class="chart" id="nhx-contenedor"></div>
+	</div>
+	<script type="text/javascript" src="js/jquery-2.2.1.min.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script type="text/javascript" src="js/raphael.js"></script>
+	<script type="text/javascript" src="js/Treant.js"></script>
+	<script>
+		var __representantes__ = [];
+		var nhx_representantes = 0;
+		var nhx_contador = 0;
+		var nhx_arbol_config = {
+			container: '#nhx-contenedor',
+			rootOrientation: 'WEST',
+			connectors: {
+				type: 'bCurve',
+				style: {
+					stroke: '#2bbbad',
+					'stroke-width': 3
+				}
+			}
+		};
+		//var raiz = {pseudo: true, text: {name: 'Por Eder Ortega'}};
+		//var __grafica__ = [nhx_arbol_config, raiz];
+
+		$(document).ready(
+			function()
+			{
+				$('#nhx_asistente_1').openModal();
+			}
+		);
+		$('#nhx_datos').on("change",
+			function()
+			{
+				llenar(this.value, nhx_contador);
+			}
+		);
+
+		function initDatos()
+		{
+			$('#nhx_asistente_1').closeModal();
+			$('#nhx_asistente_2').openModal();
+			nhx_representantes = $('#nhx_representantes').val();
+			nextDato();
+		}
+		function nextDato()
+		{
+			// Recuperar datos existentes
+			if(nhx_contador > 0)
+			{
+				var representante_tmp = [];
+				for(x = 1; x <= $('#nhx_datos').val(); x++)
+					representante_tmp.push($('#representante_'+nhx_contador+'_dato_'+x).val());
+				__representantes__.push(representante_tmp);
+			}
+
+			nhx_contador++;
+
+			$('#nhx_datos').val(1);
+			llenar($('#nhx_datos').val(), nhx_contador);
+
+			if(nhx_contador > nhx_representantes)
+			{
+				construirGrafica();
+				$('#nhx_asistente_2').closeModal();
+				return;
+			}
+			$('#nhx_asistente_2_titulo').text('Representante '+nhx_contador);
+		}
+		function llenar(limite, repr)
+		{
+			$('#nhx_datos_array').empty();
+			for(i = 1; i <= limite; i++)
+			{
+				$('#nhx_datos_array').append('<div class="input-field col m3"><input placeholder="Dato '+i+'" id="representante_'+repr+'_dato_'+i+'" type="text" class="validate"></div>');
+			}
+		}
+		function construirGrafica()
+		{
+			var array_hijos = [], array_hijos_tmp = [];
+			var objetoJSON = undefined;
+			for(var x = __representantes__.length - 1; x >= 0; x--)
+			{
+				for(w = 0; w < __representantes__[x].length; w++)
+				{
+					objetoJSON = new Object();
+					if(x == __representantes__.length - 1)
+					{
+						objetoJSON.text = {name: __representantes__[x][w]};
+						array_hijos_tmp.push(objetoJSON);
+					}
+					else
+					{
+						objetoJSON.text = {name: __representantes__[x][w]};
+						objetoJSON.children = array_hijos;
+						array_hijos_tmp.push(objetoJSON);
+					}
+				}
+				array_hijos = array_hijos_tmp.slice();
+				array_hijos_tmp.length = 0;
+			}
+			console.log(JSON.stringify(array_hijos, null, 2));
+
+			new Treant({chart: nhx_arbol_config, nodeStructure: {pseudo: true, text: {name: "Padrote"}, children: array_hijos}});
+		}
+	</script>
+</body>
+</html>

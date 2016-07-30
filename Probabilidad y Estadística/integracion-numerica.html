@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!---
+	IPN - ESCOM
+	Probabilidad y Estadística
+	Ortega Ortuño Eder - 2CV2
+-->
+<html lang="es_MX">
+<head>
+	<meta charset="UTF-8">
+	<title>Ejercicio 2 - Probabilidad y Estadística</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="css/materialize.min.css">
+	<link rel="stylesheet" href="css/katex.min.css">
+</head>
+<body>
+	<style>
+		.katex-display
+		{
+			font-weight: bold;
+			word-spacing: 30px;
+			display: inline !important;
+		}
+		#nhx-grafica
+		{
+			width: 700px;
+			height: 400px;
+		}
+	</style>
+	<div class="container">
+		<div class="row">
+			<h1>Integración numérica</h1>
+			<h6>Ortega Ortuño Eder - 2CV2</h6>
+		</div>
+		<div class="row">
+			<h5>Selecciona una opción</h5>
+			<form>
+				<input type="radio" name="select-ejemplo" id="select-ejemplo-1" class="with-gap" checked="checked"value="0x00"/>
+				<label for="select-ejemplo-1">Ejemplo 1</label>
+				<input type="radio" name="select-ejemplo" id="select-ejemplo-2" class="with-gap" value="0x01"/>
+				<label for="select-ejemplo-2">Ejemplo 2</label>
+			</form>
+		</div>
+		<div class="row">
+			<h5>Introduce los valores de las variables</h5>
+			<div class="container-fluid">
+				<div class="row">
+					<form id="nhx-inputs">
+					<div class="col s2">
+					<label for="nhx_input_a">Valor de $$\alpha$$</label>
+						<input type="text" class="validate" placeholder="Límite inferior" id="nhx_input_a" disabled>
+					</div>
+					<div class="col s2">
+						<label for="nhx_input_b">Valor de $$\beta$$</label>
+						<input type="text" class="validate" placeholder="Límite superior" id="nhx_input_b" disabled>
+					</div>
+					<div class="col s2">
+						<label for="nhx_input_sigma">Valor de $$\sigma$$</label>
+						<input type="text" class="validate" placeholder="Sigma" id="nhx_input_sigma" disabled>
+					</div>
+					<div class="col s2">
+						<label for="nhx_input_mu">Valor de $$\mu$$</label>
+						<input type="text" class="validate" placeholder="Mu" id="nhx_input_mu" disabled>
+					</div>
+					<div class="col s2">
+						<label for="nhx_input_n">Cantidad de divisiones</label>
+						<input type="number" class="validate" placeholder="N" id="nhx_input_n" value="4" min="2" step="2" disabled>
+					</div>
+					<div class="col s2">
+						<label for="nhx_input_incB">Incremento $$\beta$$</label>
+						<input type="text" class="validate" placeholder="N" id="nhx_input_incB" value="0.02">
+					</div>
+					</form>
+				</div>
+				<div class="row">
+					<div class="col s6">
+						<a class="waves-effect waves-light btn-large" onclick="calcularResultado()">Calcular</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col s8 offset-s2"id="nhx-tabla">
+						<table class="striped centered">
+							<thead>
+								<tr>
+									<th>Intervalo</th>
+									<th>Integral definida</th>
+									<th>Resultado</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s8 offset-s2"><div id="nhx-grafica" style="width: 700px; height: 400px;"></div></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-2.2.1.min.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script type="text/javascript" src="js/katex.min.js"></script>
+	<script type="text/javascript" src="js/auto-render.min.js"></script>
+	<script type="text/javascript" src="js/dygraph-combined.js"></script>
+	<script type="text/javascript" src="js/graficador.nhx.js"></script>
+	<script>
+		// Variables globales
+		//var NHXWebWorker = new Worker('js/simpson.nhx.js'); // El WebWorker no funca si está dentro de funciones locales
+		var alpha = beta = sigma = mu = divisiones = incremento = '';
+		var limite = 6;
+		var nhx_selector = 0;
+		var eval_ecuacion = ['(pow(bignumber(E), (-1/2) * pow((x-'+mu+') / '+sigma+', 2))) / ('+sigma+' * sqrt(2 * bignumber(PI)))', '(pow(bignumber(E), pow(x, 2) / -2) / sqrt(2 * bignumber(PI)))'];
+		var ecuaciones_tex = ['\\int^{'+beta+'}_{'+alpha+'} \\frac{e^{-\\frac{1}{2} (\\frac{x-'+mu+'}{'+sigma+'})^{2}} dx}{'+sigma+' \\sqrt{2 \\pi}}', '\\int^{'+beta+'}_{'+alpha+'} \\frac{e^{-\\frac{x^2}{2}} dx}{\\sqrt{2 \\pi}}'];
+
+		/*NHXWebWorker.addEventListener('message', function(evento)
+			{
+				console.log('OK');
+				alpha = evento.data[0];
+				beta = evento.data[1];
+				$('#nhx-tabla tbody').append('<tr><td></td><td>'+katex.renderToString(ecuaciones_tex[nhx_selector])+'</td><td>'+katex.renderToString('\\approx '+evento.data[2])+'</td></tr>');
+			},
+		false);*/
+		// Antes de abandonar la página, terminamos el worker sin importar lo que esté haciendo
+		/*window.onbeforeunload = function()
+			{
+				NHXWebWorker.terminate();
+				return 'El WebWorker ha sido detenido, ¿deseas abandonar la página actual?'; // El mensaje no se muestra en Firefox
+			};*/
+		function init()
+		{
+			var katexAutoInitOptions = [
+				{left: "$$", right: "$$", display: true},
+				{left: "\\[", right: "\\]", display: true},
+				{left: "\\(", right: "\\)", display: false}
+			];
+			renderMathInElement(document.body, katexAutoInitOptions);
+
+			update();
+		}
+		function calcularResultado()
+		{
+			if(!validarDatos())
+			{
+				alert('Checa los valores que introdujiste, algo malió sal...');
+				return;
+			}
+
+			alpha = parseFloat($('#nhx_input_a').val());
+			beta = parseFloat($('#nhx_input_b').val());
+			sigma = parseFloat($('#nhx_input_sigma').val());
+			mu = parseFloat($('#nhx_input_mu').val());
+			divisiones = parseFloat($('#nhx_input_n').val());
+			incremento = parseFloat($('#nhx_input_incB').val());
+
+			if(beta <= alpha)
+			{
+				alert('El límite superior no puede ser menor o igual al límite inferior');
+				return;
+			}
+			if(divisiones % 2 != 0)
+			{
+				alert('El número de divisiones debe ser par');
+				return;
+			}
+
+			// Si las validaciones adicionales son correctas, se procede a ejecutar el código importante
+			$('#nhx-tabla tbody').empty();
+			if(nhx_selector == 0)
+			{
+				ajax = $.ajax({url: 'http://localhost:8088', async: false, data: {a: alpha.toFixed(2), b: beta.toFixed(2), div: divisiones, ecuacion: 0, mu: mu, sigma: sigma}});
+				ajax.done(
+					function(datos)
+					{
+						$('#nhx-tabla tbody').append('<tr><td></td><td>'+katex.renderToString('\\int^{'+beta+'}_{'+alpha+'} \\frac{e^{-\\frac{1}{2} (\\frac{x-'+mu+'}{'+sigma+'})^{2}} dx}{'+sigma+' \\sqrt{2 \\pi}}')+'</td><td>'+katex.renderToString('\\approx '+datos)+'</td></tr>');
+						graficar('Math.pow(Math.E, (-1/2) * Math.pow((x-'+mu+')/'+sigma+', 2)) / ('+sigma+'*Math.sqrt(2*Math.PI))', document.getElementById('nhx-grafica'), -beta, beta);
+					}
+				);
+			}
+			else if(nhx_selector == 1)
+			{
+				var datosss = [];
+				var ajax = undefined;
+				beta = alpha + incremento;
+				while(beta <= limite)
+				{
+					ajax = $.ajax({url: 'http://localhost:8088', async: false, data: {a: alpha.toFixed(2), b: beta.toFixed(2), div: 200, ecuacion: 1, mu: 1, sigma: 1}});
+					ajax.done(
+						function(datos)
+						{
+							datosss.push([alpha.toFixed(2), beta.toFixed(2), datos]);
+						}
+					);
+					//NHXWebWorker.postMessage([eval_ecuacion[nhx_selector], alpha, beta, divisiones]);
+					//console.log('Desde '+alpha.toFixed(2)+' hasta '+beta.toFixed(2))
+					beta += incremento;
+				}
+				
+				for(i = 0; i < datosss.length; i++)
+					$('#nhx-tabla tbody').append('<tr><td></td><td>'+katex.renderToString('\\int^{'+datosss[i][1]+'}_{'+datosss[i][0]+'} \\frac{e^{-\\frac{x^2}{2}} dx}{\\sqrt{2 \\pi}}')+'</td><td>'+katex.renderToString('\\approx '+datosss[i][2])+'</td></tr>');
+			}
+			$('#nhx-tabla').show();
+		}
+		function validarDatos()
+		{
+			var flag = true;
+			$('#nhx-inputs input').each(function()
+				{
+					if($(this).is(':enabled'))
+					{
+						// Validar campos vacíos
+						if(!$(this).val())
+						{
+							flag = false;
+							return;
+						}
+						// Validar números
+						var xxx = new RegExp(/^\-?[0-9]+([,.][0-9]+)?$/i); // La expresión regular acepta números positivos/negativos sin punto decimal y con punto decimal con una mantisa máxima de 5 elementos
+						if(!xxx.test($(this).val()))
+						{
+							flag = false;
+							return;
+						}
+					}
+				}
+			);
+			return flag;
+		}
+		function update(opcion)
+		{
+			$('#nhx-inputs input').each(function(){$(this).prop('disabled', function(i, v){return !v;})});
+			$('#nhx-tabla tbody').empty();
+			$('#nhx-tabla').hide();
+
+			if(opcion == 0x00)
+				nhx_selector = 0;
+			if(opcion == 0x01)
+			{
+				nhx_selector = 1;
+				$('#nhx_input_a').val('-6');
+				$('#nhx_input_b').val('6');
+			}
+		}
+		$('input[type=radio][name=select-ejemplo]').on('change', function(){update($(this).val())});
+		$(document).ready(function(){init()});
+	</script>
+</body>
+</html>

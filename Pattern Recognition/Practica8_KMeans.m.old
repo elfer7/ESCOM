@@ -1,0 +1,31 @@
+% IPN - ESCOM
+% Pattern Recognition
+% Ortega Ortu�o Eder - blog.nativehex.com/pattern-recognition
+
+clc
+
+figure
+hold on
+grid on
+
+nhx_colores = ['m'; 'r'; 'g'; 'b']; % Especificadores para colores de ploteo: http://www.mathworks.com/help/matlab/ref/plot.html
+nhx_figuras = ['o'; '+'; '*'; '.'; 'x'; 's'; 'd'; '^'; 'v'; '<'; '>'; 'p'; 'h']; % Especificadores para marcadores de ploteo
+
+%limite = input('Límite de la gráfica: ');
+puntos = input('Cantidad de puntos: ');
+datos = randi([-50, 50], puntos, 2);
+%plot(datos(:, 1), datos(:, 2), 'k>')
+
+k = input('Cantidad de clusters (grupos = K): ');
+[centroide, puntos_por_grupo, asignacion] = PR_KMeans(datos, k); % La asignación indica en órden a qué grupo (centroide) pertenece cada fila
+
+for i=1:size(centroide, 1)
+    figura_aleatoria = strcat(nhx_colores(randi([1, size(nhx_colores, 1)], 1, 1)), nhx_figuras(randi([1, size(nhx_figuras, 1)], 1, 1)));
+    plot(centroide(i, 1), centroide(i, 2), figura_aleatoria, 'LineWidth', 2)
+    
+    for a=1:size(asignacion, 1)
+        if asignacion(a) == i
+            plot(datos(a, 1), datos(a, 2), figura_aleatoria, 'LineWidth', 1)
+        end
+    end
+end

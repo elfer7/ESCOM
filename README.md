@@ -1,10 +1,9 @@
 #ESCOM
 ####Instituto Politécnico Nacional | Escuela Superior de Cómputo  
 
-Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejercicios propios que he hecho durante mi carrera de Ingeniería en Sistemas Computacionales.
+Repositorio personal de código escrito para prácticas o proyectos escolares; si algo de acá te funciona, tómalo.
 
 ##Lenguajes utilizados
-###Lenguajes de programación y scripting
 - C
 - C++
 - C#
@@ -17,8 +16,6 @@ Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejerc
 - Ruby
 - PHP
 - JavaScript
-
-###Otros
 - HTML
 - CSS
 - SASS/LESS
@@ -28,12 +25,11 @@ Repositorio personal donde almacenaré prácticas, tareas, scripts y otros ejerc
 - LaTeX
 - SQL
 - VHDL
+- Matlab
 - Flex (generador de analizadores léxicos)
 - Bison (generador de analizadores sintácticos)
-- Matlab Scripts
 
-##Créditos
-El código de estos proyectos y ejercicios se distribuyen bajo la licencia **Apache v2.0**, por lo que se puede distribuir el código libremente siempre y cuando se haga referencia al autor y enlaces directos al sitio del proyecto.
-
-**Autor:** Ortega Eder  
+**Autor:** Eder Ortega
 **Website:** [eder.nativehex.com](http://eder.nativehex.com/)
+
+**Liberado bajo la licencia WTFPL** *(Haz lo que se te canten las pelotas con el código)*

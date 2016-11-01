@@ -1,9 +1,9 @@
-#ESCOM
-####Instituto Politécnico Nacional | Escuela Superior de Cómputo  
+# ESCOM
+#### Instituto Politécnico Nacional | Escuela Superior de Cómputo  
 
 Repositorio personal de código escrito para prácticas o proyectos escolares; si algo de acá te funciona, tómalo.
 
-##Lenguajes utilizados
+## Lenguajes utilizados
 - C
 - C++
 - C#
@@ -29,6 +29,8 @@ Repositorio personal de código escrito para prácticas o proyectos escolares; s
 - Flex (generador de analizadores léxicos)
 - Bison (generador de analizadores sintácticos)
 
-Por **[Eder Ortega](http://eder.nativehex.com/)**
+## Créditos
+
+Por **[Eder Ortega](http://eder.nativehex.com/)**.
 
 Liberado bajo la licencia **WTFPL**. *(Haz lo que se te canten las pelotas con el código)*.

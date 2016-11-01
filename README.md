@@ -33,4 +33,4 @@ Repositorio personal de código escrito para prácticas o proyectos escolares; s
 
 Por **[Eder Ortega](http://eder.nativehex.com/)**.
 
-Liberado bajo la licencia **WTFPL**. *(Haz lo que se te canten las pelotas con el código)*.
+Liberado bajo la licencia **WTFPL**. *(TL;DR: haz lo que se te canten las pelotas con el código)*.
